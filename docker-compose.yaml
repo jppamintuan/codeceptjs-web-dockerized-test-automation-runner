@@ -1,0 +1,38 @@
+version: '2'
+services:
+  firefox:
+    container_name: selenium-firefox-container
+    image: selenium/node-firefox:3.141.59
+    volumes:
+      - /dev/shm:/dev/shm
+    depends_on:
+      - hub
+    environment:
+      HUB_HOST: hub
+  
+  chrome:
+    container_name: selenium-chrome-container
+    image: selenium/node-chrome:3.141.59
+    volumes:
+      - /dev/shm:/dev/shm
+    depends_on:
+      - hub
+    environment:
+      HUB_HOST: hub
+
+  hub:
+    container_name: selenium-hub
+    image: selenium/hub:3.141.59
+    ports:
+      - "4444:4444"
+
+  codeceptjs-web-dockerized-test:
+    container_name: googlesearchtest
+    image: jppamintuan/codeceptjs-web-dockerized-test
+    volumes:
+      - /dev/shm:/dev/shm
+      - ./report_container:/source/reports
+    depends_on:
+      - hub
+      - firefox
+      - chrome
